@@ -172,6 +172,7 @@ CREATE TABLE `xdb_reports` (
   `spied_troops_out_priest` int(10) unsigned NOT NULL default '0',
   `spied_troops_out_knight` int(10) unsigned NOT NULL default '0',
   `spied_troops_out_snob` int(10) unsigned NOT NULL default '0',
+  `spied_troops_village` varchar(50) NOT NULL,  
   `troops_out` tinyint(1) unsigned NOT NULL default '0',
   `troops_out_spear` int(10) unsigned NOT NULL default '0',
   `troops_out_sword` int(10) unsigned NOT NULL default '0',
@@ -195,6 +196,8 @@ CREATE TABLE `xdb_reports` (
   `mood` tinyint(1) unsigned NOT NULL default '0',
   `mood_before` tinyint(4) NOT NULL default '0',
   `mood_after` tinyint(4) NOT NULL default '0',
+  `dot` varchar(10) NOT NULL default 'grey',
+  `no_information` tinyint(1) NOT NULL default '0',
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
 

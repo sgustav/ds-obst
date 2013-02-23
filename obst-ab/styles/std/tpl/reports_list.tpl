@@ -28,7 +28,7 @@
         <tr>
             <td>{$report.realtime|date_format:"%d.%m.%Y, %H:%M"}</td>
             <td>{$report.time|date_format:"%d.%m.%Y, %H:%M"}</td>
-            <td>{if $report.lastcomment > $obst_user->getVal('lastlogin')}! {/if}<a href="index.php?page=reports&amp;action=view&amp;id={$report.id}">{$report.attacker_nick} greift {$report.defender_village} an</a></td>
+            <td><img src="styles/std/graphic/dots/{$report.dot}.png" title="" alt="" class=""> {if $report.lastcomment > $obst_user->getVal('lastlogin')}! {/if}<a href="index.php?page=reports&amp;action=view&amp;id={$report.id}">{$report.attacker_nick} greift {$report.defender_village} an</a></td>
             <td>{if $report.world != 0}{$report.world}{else}-{/if}</td>
             <td>{$report.group}</td>
             <td>{$report.attacker_nick}</td>

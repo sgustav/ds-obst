@@ -78,6 +78,19 @@
                             new DSUnit('knight', 'Priester'),
                             new DSUnit('snob', 'Adelsgeschlecht')
                         );
+   
+    setUnits(60, array(
+                            new DSUnit('spear', 'Speerträger'),
+                            new DSUnit('sword', 'Schwertkämpfer'),
+                            new DSUnit('axe', 'Axtkämpfer'),
+                            new DSUnit('spy', 'Späher'),
+                            new DSUnit('light', 'Leichte Kavallerie'),
+                            new DSUnit('heavy', 'Schwere Kavallerie'),
+                            new DSUnit('ram', 'Rammbock'),
+                            new DSUnit('catapult', 'Katapult'),
+                            new DSUnit('snob', 'Adelsgeschlecht')
+                        )
+            );
     */
     // ...
     

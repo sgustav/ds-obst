@@ -36,7 +36,7 @@
         $obst['url'] = 'http://www.yourdomain.com';
         
         /* The email of the OBST administrator. Is used in emails for instance */
-        $obst['email'] = 'your@email.net';
+        $obst['email'] = 'yourname@yourdomain.com';
         
         /* The Tag of your tribe */
         $obst['name'] = '-TAG-';
@@ -48,7 +48,7 @@
         $obst['sysadmin'] = 1;
         
         /* IMPORTANT: This array specifies the worlds for which this installation of OBST is enabled */
-        $obst['worlds'] = array(11,12);
+        $obst['worlds'] = array(60);
         
         /* This setting enables/disables OBST's debugmode. */
         define('OBST_DEBUG',TRUE); // debug mode? (SQL queries will be printed out for example)
@@ -62,10 +62,10 @@
         require(OBST_ROOT.'/include/config.units.php'); // IMPORTANT: LOOK IN THIS FILE, TOO!
         
         // mysql configuration
-        $mysql_user='robert';
-        $mysql_pass='robtretrerob';
-        $mysql_host='localhost';
-        $mysql_name='obst'; // the database name
+        $mysql_user='db_username';
+        $mysql_pass='db_password';
+        $mysql_host='db_host'; // the database host address
+        $mysql_name='db_name'; // the database name
     
     /* END configuration of OBST */
 ?>

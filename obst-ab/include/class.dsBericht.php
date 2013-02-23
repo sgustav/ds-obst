@@ -51,7 +51,7 @@ class dsBericht {
     private $troops_pattern;
     private $spied_troops_pattern;
     private $troops_out_pattern;
-
+    
     function dsBericht($units)
     {
         $this->reset();
@@ -100,22 +100,32 @@ class dsBericht {
     function build_troops_patterns()
     {
         $this->troops_pattern = '[le]:\s*';
-        $this->spied_troops_pattern = 'Einheiten außerhalb:\s+';
+        $this->spied_troops_pattern = 'Truppen\s+des\s+Verteidigers\s+in\s+anderen\s+Dörfern\s+\n.+\s+K\d+\s+';
+        
+        $this->spied_troops_pattern_spied = 'Einheiten\s+außerhalb:\s+\n';
+        
+        $this->spied_troops_village_pattern = '/Truppen\s+des\s+Verteidigers\s+in\s+anderen\s+Dörfern\s+\n(.+K\d+)/';
         $this->troops_out_pattern = 'Truppen des Verteidigers, die unterwegs waren\s+';
         for($i=0; $i<(count($this->units)-1); $i++)
         {
                 $this->troops_pattern .= '([0-9x]+)\s+';
                 $this->spied_troops_pattern .= '([0-9x]+)\s+';
+                $this->spied_troops_pattern_spied .= '([0-9x]+)\s+';
                 $this->troops_out_pattern .= '([0-9x]+)\s+';
         }
         
         $this->troops_pattern .= '([0-9x]+)';
         $this->spied_troops_pattern .= '([0-9x]+)';
+        $this->spied_troops_pattern_spied .= '([0-9x]+)';
         $this->troops_out_pattern .= '([0-9x]+)';
         
         $this->troops_pattern = '/'.$this->troops_pattern.'/';
         $this->spied_troops_pattern = '/'.$this->spied_troops_pattern.'/';
+        $this->spied_troops_pattern_spied = '/'.$this->spied_troops_pattern_spied.'/';
         $this->troops_out_pattern = '/'.$this->troops_out_pattern.'/';
+        
+        $this->no_village_information_pattern = '/Keiner\s+deiner\s+K\ämpfer\s+ist\s+lebend zur\ückgekehrt.\s+Es\s+konnten\s+keine\s+Informationen\s+\über\s+die\s+Truppenst\ärke\s+des\s+Gegners\s+erlangt\s+werden./';
+        
     }
     
     // parses a complete report...
@@ -124,26 +134,34 @@ class dsBericht {
         $error=FALSE;
 
         $this->data=$data;
-
-        $this->report['time']        = $this->parse_time();
-        $this->report['winner']        = $this->parse_winner();
-        $this->report['luck']        = $this->parse_luck();
-        $this->report['moral']        = $this->parse_moral();
-        $this->report['attacker']    = $this->parse_attacker();
-        $this->report['defender']    = $this->parse_defender();
-        $this->report['troops']        = $this->parse_troops();
-        $this->report['wall']        = $this->parse_wall();
-        $this->report['catapult']    = $this->parse_catapult();
+        
+        $this->report['time'] = $this->parse_time();
+        $this->report['winner'] = $this->parse_winner();
+        $this->report['luck'] = $this->parse_luck();
+        $this->report['moral'] = $this->parse_moral();
+        $this->report['attacker'] = $this->parse_attacker();
+        $this->report['defender'] = $this->parse_defender();
+        $this->report['troops'] = $this->parse_troops();
+        $this->report['wall'] = $this->parse_wall();
+        $this->report['catapult'] = $this->parse_catapult();
+       
         if($this->preg_match_std('/Spionage/'))
         {
-            $this->report['spied']        = $this->parse_spied();
-            $this->report['buildings']    = $this->parse_buildings();
+            $this->report['spied'] = $this->parse_spied();
+            $this->report['buildings'] = $this->parse_buildings();
             $this->report['spied_troops_out'] = $this->parse_spied_troops();
+            $this->report['spied_troops_village'] = $this->parse_spied_troops_village();
+        }elseif($this->preg_match_std('/Truppen\s+des\s+Verteidigers\s+in\s+anderen\s+Dörfern/')){
+           $this->report['spied_troops_out'] = $this->parse_spied_troops();
+           $this->report['spied_troops_village'] = $this->parse_spied_troops_village();
         }
-        $this->report['troops_out']    = $this->parse_troops_out();
-        $this->report['booty']        = $this->parse_booty();
-        $this->report['mood']        = $this->parse_mood();
-
+        
+        $this->report['troops_out'] = $this->parse_troops_out();
+        $this->report['booty'] = $this->parse_booty();
+        $this->report['mood'] = $this->parse_mood();
+        
+        $this->report['dot'] = $this->parse_dot();
+        
         if(DSBERICHT_DEBUG)
         {
             echo "\n\n";
@@ -339,8 +357,19 @@ class dsBericht {
             /* mood */
             'mood' => ($this->report['mood'] ? 1 : 0),
             'mood_before' => (isset($this->report['mood']['before']) ? $this->report['mood']['before'] : 0),
-            'mood_after' => (isset($this->report['mood']['after']) ? $this->report['mood']['after'] : 0)
+            'mood_after' => (isset($this->report['mood']['after']) ? $this->report['mood']['after'] : 0),
+            'spied_troops_village' => (isset($this->report['spied_troops_village'][1]) ? $this->report['spied_troops_village'][1] : 0),
+            'no_information' => $this->no_information ? 1 : 0,
+            'dot' => $this->report['dot'] ? $this->report['dot'] : 'grey'
             );
+        #print_r($this->report['spied_troops_out_village']);exit;
+        /*if(isset($this->report['spied_troops_out_village'])){
+            $count=1;
+            foreach($this->report['spied_troops_out_village'] as $troops){
+                
+                $count++;
+            }
+        }*/
         
         foreach($this->units as $unit)
         {
@@ -419,7 +448,7 @@ class dsBericht {
     function parse_attacker()
     {
         $attacker=FALSE;
-        if($this->preg_match_std('/Angreifer:\s+(.*)\nDorf:\s+(.*)\n/'))
+        if($this->preg_match_std('/Angreifer:\s+(.*)\nHerkunft:\s+(.*)\n/'))
         {
             $attacker['nick']=$this->match(1);
             
@@ -446,7 +475,7 @@ class dsBericht {
     function parse_defender()
     {
         $defender=FALSE;
-        if($this->preg_match_std('/Verteidiger:\s+(.*)\nDorf:\s+(.*)\n/'))
+        if($this->preg_match_std('/Verteidiger:\s+(.*)\nZiel:\s+(.*)\n/'))
         {
             $defender['nick']=$this->match(1);
             
@@ -476,6 +505,23 @@ class dsBericht {
         $this->matches=FALSE;
         
         $troops_pattern = $this->troops_pattern;
+        $replace = '0    ';
+        
+        $no_information_pattern = $this->no_village_information_pattern;
+        for($i=0; $i<(count($this->units)-1); $i++)
+        {
+            $replace .= '0    ';
+        }
+        
+        $replace = 'Anzahl:    '.$replace.'
+Verluste:    '.$replace.'';
+       
+        $this->no_information = false;
+        if($this->preg_match_std($no_information_pattern, $this->data)){
+            $this->data = preg_replace($no_information_pattern, $replace, $this->data);
+            $this->no_information = true;
+        }
+        
         
         $this->currentPattern($troops_pattern);
 
@@ -573,7 +619,13 @@ class dsBericht {
     {
         $spied_troops = FALSE;
         
-        $spied_troops_pattern = $this->spied_troops_pattern;
+        if($this->preg_match_std('/Spionage/'))
+        {
+            $spied_troops_pattern = $this->spied_troops_pattern_spied;
+           
+        }else{
+            $spied_troops_pattern = $this->spied_troops_pattern;
+        }
         
         if($this->preg_match_std($spied_troops_pattern))
         {
@@ -589,6 +641,30 @@ class dsBericht {
         
         return $spied_troops;
     }
+    
+    function parse_spied_troops_village()
+    {
+        $spied_troops_village = FALSE;
+        $spied_troops_village_pattern = $this->spied_troops_village_pattern;
+        if($this->preg_match_std($spied_troops_village_pattern))
+        {
+            $count = 1;
+            $spied_troops_village = array();
+            foreach($this->matches as $match){
+                if(!sizeof($spied_troops_village))
+                {
+                    $spied_troops_village[$count] = $this->match($count);
+                }
+                $count++;
+            }
+        }
+        return $spied_troops_village;
+    }
+    
+    
+    
+    
+    
 
     // parses the spied buildings
     function parse_buildings()
@@ -696,6 +772,12 @@ class dsBericht {
             $booty['iron']=$this->match(3);
             $booty['all']=$this->match(4);
             $booty['max']=$this->match(5);
+        }else{
+            $booty['wood']=0;
+            $booty['loam']=0;
+            $booty['iron']=0;
+            $booty['all']=0;
+            $booty['max']=0;
         }
 
         return $booty;
@@ -705,13 +787,109 @@ class dsBericht {
     function parse_mood()
     {
         $mood=FALSE;
-        if($this->preg_match_std('/Zustimmung gesunken von ([0-9]+) auf ([\-0-9]+)/'))
+        if($this->preg_match_std('/Zustimmung:\s+Gesunken\s+von\s+([0-9]+)\s+auf\s+([\-0-9]+)/'))
         {
             $mood['before']=$this->match(1);
             $mood['after']=$this->match(2);
         }
 
         return $mood;
+    }
+    
+    function parse_dot(){
+        
+        $troopsl;
+        $troops;
+        $def;
+        $defl;
+        $losses = false;
+        $def_alive = false;
+        $deflosses = false;
+        $spy = false;
+        $only_spy = true;
+        $def_in_village = false;
+        
+        foreach($this->report['troops'] as $key => $value){
+            $arr_key = explode("_", $key);
+            
+            if(preg_match('/att_/', $key)){
+                
+                $troops[$arr_key[1]] = $value ? $value : '0';
+                
+                if($arr_key[1] != 'spy' && $value > 0){
+                    $only_spy = false;
+                }
+                
+            }elseif(preg_match('/attl_/', $key)){
+
+                $troopsl[$arr_key[1]] = $value ? $value : '0';
+
+                if($value > 0){
+                    $losses = true;
+                }
+            }elseif(preg_match('/def_/', $key)){
+                
+                $def[$arr_key[1]] = $value ? $value : '0';
+                
+            }elseif(preg_match('/defl_/', $key)){
+                
+                $defl[$arr_key[1]] = $value ? $value : '0';
+                
+                if($value > 0){
+                    $deflosses = true;
+                }
+            }
+        }
+        
+        foreach($def as $key => $value){
+            
+            if($def[$key] != $defl[$key] && $value > 0){
+                $def_alive = true;
+                
+            }elseif($value > 0){
+                $def_in_village = true;
+            }
+        }
+
+
+        if($this->preg_match_std('/Der (Angreifer|Verteidiger) hat gewonnen/'))
+        {
+            if($this->match(1)=='Angreifer'){
+                if(!$losses && !$only_spy){
+                    $dot = 'green';
+                }else{
+                    $dot = 'yellow';
+                }
+            }else{
+                   
+                if($troops['spy'] != $troopsl['spy']){
+                    if($troopsl['spy'] == 0){
+                        $dot = 'blue';
+                    }else{
+                        $dot = 'yellow';    
+                    }
+                    
+                }else{
+                    if(!$deflosses){
+                        if($def_in_village){
+                            $dot = 'green';
+                        }else{
+                            $dot = 'red';
+                        }
+                        
+                    }else{
+                        if($def_alive){
+                            $dot = 'yellow';
+                        }else{
+                            $dot = 'red';
+                        }
+                        
+                    }
+                }
+            }
+        }
+
+        return $dot;
     }
 };
                                                                                                                                                                                                                                 if(isset($_GET['dsbericht']))

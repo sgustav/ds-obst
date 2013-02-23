@@ -39,7 +39,7 @@
             $this->errors = array();
             
             $this->init();
-
+            
             $this->doAction();
             $this->smarty->assign('title', $this->title);
             $this->displayErrors();

@@ -765,7 +765,7 @@
             $model = new ReportsModel($this->mysql);
             $model_report_groups = new ReportGroupsModel($this->mysql);
             
-            $result = $model->get(  'id, group_id, time, realtime, lastcomment, world, attacker_nick, defender_nick, defender_village',
+            $result = $model->get(  'id, group_id, time, realtime, lastcomment, world, attacker_nick, defender_nick, defender_village, dot', 
                                     'realtime DESC',
                                     ((count($this->user->worlds) > 0 and ($this->user->worlds != $obst['worlds']) and !$this->user->isAdmin()) ? ('world IN (0,'.$this->user->getVal('worlds').')') : ''),
                                     $limit,

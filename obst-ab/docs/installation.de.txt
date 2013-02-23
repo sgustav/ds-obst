@@ -1,0 +1,41 @@
+=== INFORMATIONEN ÜBER OBST ===
+
+In der Datei /docs/version.txt findest du die genaue Version von diesem OBST-Paket.
+Die Datei /docs/changelog.txt enthält Informationen über Änderungen/Unterschiede im Vergleich
+zur vorherigen Version von OBST.
+
+=== INSTALLATION VON OBST ===
+
+    = Hochladen der Dateien =
+    
+        Zunächst müssen die Dateien von OBST in ein Verzeichnis auf dem Webspace hochgeladen werden.
+        Der Inhalt des Verzeichnis /obst-ab muss per Browser erreichbar sein. D.h., sofern es dir möglich ist,
+        dass du eine Subdomain oder einen Host von deinem Webspace auf dieses Verzeichnis einstellen solltest.
+        
+        Der Ordner /smarty hingegen kann grundsätzlich beliebig auf dem Webspace platziert werden. Jedoch muss
+        dann in der Konfigurationsdatei der korrekte Pfad zu dem Smarty-Ordner angegeben werden.
+        Das kann einige Minuten zusätzlich kosten.
+        Ich empfehle, den /smarty-Ordner einen Ordner über dem /obst-ab Ordner zu platzieren - also die
+        STANDARD-Platzierung.
+    
+    = Installation aufrufen =
+    
+        OBST bietet einen sehr rudimentären Installationsassistenten. Man kann ihn über /install/install.php erreichen.
+        Man muss einfach nur den Anweisungen folgen.
+        Am Schluss kommt man zum OBST-Login - vorrausgesetzt, es hat alles geklappt. Nun kann man sich mit dem
+        soeben angelegten Administrator-Account einloggen.
+    
+    = FERTIG =
+    
+        Viel Spaß mit OBST!
+
+
+
+
+
+=== Wenn Fehler auftreten... ===
+
+    ...besucht mich und andere OBST-Benutzer im IRC: der Channel ist #obst und befindet sich im Quakenet...
+    ...schreibt mir eine EMail: <support@bmaker.net> mit einem entsprechenden Betreff...
+    ...oder, und das bevorzuge ich gegenüber der EMail -> verwendet das Tracker-System von sourceforge.net:
+    http://sourceforge.net/tracker/?group_id=181056 ...

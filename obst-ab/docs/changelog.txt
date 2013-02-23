@@ -1,0 +1,17 @@
+seit v0.9.0.1:
+    - das Aussehen der Berichte ist nun noch näher an dem Original
+    - man kann nur noch Userlevel bis 10000 vergeben
+    - der Installer lässt kein Weitermachen mehr zu, wenn die Anforderungen nicht erfüllt sind
+    - wenn der Installer die Datei "lock_setup" nicht erstellen kann, wird eine Warnung ausgegeben!
+    - in Berichten wird die Zustimmungsveränderung nun auch angezeigt, wenn sie unter 0 gesenkt worden ist
+    - Fehler in der Suche bei NICHT-Admins behoben
+    - Kommentare werden hoffentlich nicht mehr komplett als Link angezeigt
+      (fehlerhafte Darstellung im Internet Explorer)
+    
+seit 0.9.0.0:
+    - Berechtigungen "Berichte kommentieren" und "Berichtkommentare löschen" sind nun auch
+      im Administrationspanel konfigurierbar
+    - Rechtschreibfehler behoben
+    - Datei /install/lock_setup ist nicht mehr im Downloadpaket enthalten
+    - einige Pfade wurden korrigiert (ab und zu war fälschlicherweise ein / angehängt)
+    - die Umlaute in der Installation funktionieren jetzt

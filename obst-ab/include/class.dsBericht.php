@@ -197,6 +197,63 @@ class dsBericht {
         return TRUE;
     }
 
+
+
+
+	function troopsToString($v,$pre)
+	{
+		$s = $pre . "troops = ";
+		$i = 0;
+	    foreach($this->units as $unit)
+	    {
+			if ($i==4) {
+				$i = 0;
+				$s = $s . " / ";
+			}
+			$i = $i + 1;
+	        $s = $s . " " . (isset($v[$pre . $unit->iname]) ? $v[$pre . $unit->iname] : "-");
+	    }
+	    return $s;
+	}
+	
+
+	function toString($v,$key)
+	{
+		if ($key=="troops") {
+			$s = "";
+			$s = $s . $this->troopsToString($v,"att_")  . "\n";
+			$s = $s . $this->troopsToString($v,"attl_") . "\n";
+			$s = $s . $this->troopsToString($v,"def_")  . "\n";
+			$s = $s . $this->troopsToString($v,"defl_");
+			return $s;
+		}
+		else if (is_array($v)) {
+			$s = "";
+			foreach($v as $key => $value) {
+				$s = $s . print_r($value,true) . "(" . $key . ") ";
+			}
+			return $key . "=" . $s;
+		}
+		else {
+			return $key . "=" . print_r($v,true);
+		}
+	}
+
+	function formatFields()
+	{
+		$lst = "";
+		foreach($this->report as $key => $value) {
+
+			$x = $this->toString($this->report[$key],$key);
+			$x = htmlspecialchars($x);
+			$x = strtr($x,array("\n" => "<br/>"));
+
+			$lst = $lst . $x . "<br/>";
+		}
+		return $lst;
+	}
+
+
     function &getReport()
     {
         return $this->report;

@@ -52,6 +52,7 @@
     define('INC_CHECK_DSBERICHT', TRUE);
     define('SSQL_INC_CHECK', TRUE);
     define('OBST_ROOT', '.');
+    define('DEBUG_PARSER', TRUE);
  
     require OBST_ROOT.'/include/config.inc.php';
     require OBST_ROOT.'/include/class.simpleMySQL.php';
@@ -146,6 +147,14 @@
             error("The report could not be parsed.");
             return;
         }
+ 
+ 
+ 		if (DEBUG_PARSER)
+ 		{
+ 			error($parser->formatFields());
+ 			return;
+ 		}
+ 
  
         $max_id = $mysql->sql_result($mysql->sql_query("SELECT MAX(id) AS max_id FROM xdb_reports"), 0, 'max_id');
         if(empty($max_id))

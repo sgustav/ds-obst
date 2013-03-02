@@ -229,8 +229,8 @@ class dsBericht {
 		}
 		else if (is_array($v)) {
 			$s = "";
-			foreach($v as $key => $value) {
-				$s = $s . print_r($value,true) . "(" . $key . ") ";
+			foreach($v as $vkey => $value) {
+				$s = $s . print_r($value,true) . "(" . $vkey . ") ";
 			}
 			return $key . "=" . $s;
 		}

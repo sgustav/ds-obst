@@ -657,15 +657,23 @@ Verluste:    '.$replace.'';
         return $catapult;
     }
 
+	function match_digit($count)
+	{
+		return str_replace(array(" ", "."), "", $this->match($count));
+	}
+
     // spied resources
     function parse_spied()
     {
         $spied=FALSE;
-        if($this->preg_match_std('/Ersp.{1,2}hte Rohstoffe:\s+([0-9\.]+)\s+([0-9\.]+)\s+([0-9\.]+)/'))
+        
+        // (\d+(\s+\.\s+\d+)?)				-> 123  oder 123 . 456
+        
+        if($this->preg_match_std('/Ersp.{1,2}hte Rohstoffe:\s+(\d+(\s+\.\s+\d+)?)\s+(\d+(\s+\.\s+\d+)?)\s+(\d+(\s+\.\s+\d+)?)/'))
         {
-            $spied['wood']=$this->match(1);
-            $spied['loam']=$this->match(2);
-            $spied['iron']=$this->match(3);
+            $spied['wood']=$this->match_digit(1);
+            $spied['loam']=$this->match_digit(3);
+            $spied['iron']=$this->match_digit(5);
         }
 
         return $spied;
@@ -821,14 +829,17 @@ Verluste:    '.$replace.'';
     // parses the attacker's booty
     function parse_booty()
     {
+		// $digit = '(\d+(\s*\.\s*\d+)?)';		// -> "123"  oder "123 . 456"
+
         $booty=FALSE;
-        if($this->preg_match_std('/Beute:\s+([\.0-9]+)\s([\.0-9]+)\s([\.0-9]+)\s+([\.0-9]+)\/([\.0-9]+)/'))
+        if($this->preg_match_std('/Beute:\s*(\d+(\s*\.\s*\d+)?)\s(\d+(\s*\.\s*\d+)?)\s(\d+(\s*\.\s*\d+)?)\s(\d+(\s*\.\s*\d+)?)\s*\/\s*(\d+(\s*\.\s*\d+)?)/'))
+
         {
-            $booty['wood']=$this->match(1);
-            $booty['loam']=$this->match(2);
-            $booty['iron']=$this->match(3);
-            $booty['all']=$this->match(4);
-            $booty['max']=$this->match(5);
+            $booty['wood']=$this->match_digit(1);
+            $booty['loam']=$this->match_digit(3);
+            $booty['iron']=$this->match_digit(5);
+            $booty['all']=$this->match_digit(7);
+            $booty['max']=$this->match_digit(9);
         }else{
             $booty['wood']=0;
             $booty['loam']=0;

@@ -52,7 +52,7 @@
     define('INC_CHECK_DSBERICHT', TRUE);
     define('SSQL_INC_CHECK', TRUE);
     define('OBST_ROOT', '.');
-    define('DEBUG_PARSER', TRUE);
+    define('DEBUG_PARSER', FALSE);
  
     require OBST_ROOT.'/include/config.inc.php';
     require OBST_ROOT.'/include/class.simpleMySQL.php';

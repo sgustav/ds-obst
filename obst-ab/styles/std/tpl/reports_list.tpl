@@ -18,6 +18,7 @@
             <th title="Wann der Bericht eingelesen wurde..." width="100">Eingelesen am</th>
             <th title="Wann der Angriff stattgefunden hat..." width="100">Datum</th>
             <th title="Betreff">Betreff</th>
+            <th>Zusammenfassung</th>
             <th title="Welt">Welt</th>
             <th title="Gruppe des Berichts">Gruppe</th>
             <th>Angreifer</th>
@@ -29,6 +30,7 @@
             <td>{$report.realtime|date_format:"%d.%m.%Y, %H:%M"}</td>
             <td>{$report.time|date_format:"%d.%m.%Y, %H:%M"}</td>
             <td><img src="styles/std/graphic/dots/{$report.dot}.png" title="" alt="" class=""> {if $report.lastcomment > $obst_user->getVal('lastlogin')}! {/if}<a href="index.php?page=reports&amp;action=view&amp;id={$report.id}">{$report.attacker_nick} greift {$report.defender_village} an</a></td>
+            <td>{$report.sumary}</td>
             <td>{if $report.world != 0}{$report.world}{else}-{/if}</td>
             <td>{$report.group}</td>
             <td>{$report.attacker_nick}</td>

@@ -260,6 +260,192 @@
             $model_report_groups = new ReportGroupsModel($this->mysql);
             $this->smarty->assign('report_groups', $model_report_groups->get());
         }
+ 
+ 
+/*
+
+attacker_coords
+defender_coords
+troops==1
+
+troops_att_spear 	troops_att_sword 	troops_att_axe 	troops_att_archer 	troops_att_spy 	troops_att_light 	troops_att_marcher 	troops_att_heavy 	troops_att_ram 	troops_att_catapult 	troops_att_priest 	troops_att_knight 	troops_att_snob
+troops_attl_spear 	troops_attl_sword 	troops_attl_axe 	troops_attl_archer 	troops_attl_spy 	troops_attl_light 	troops_attl_marcher 	troops_attl_heavy 	troops_attl_ram 	troops_attl_catapult 	troops_attl_priest 	troops_attl_knight 	troops_attl_snob
+
+troops_def_spear 	troops_def_sword 	troops_def_axe 	troops_def_archer 	troops_def_spy 	troops_def_light 	troops_def_marcher 	troops_def_heavy 	troops_def_ram 	troops_def_catapult 	troops_def_priest 	troops_def_knight 	troops_def_snob
+troops_defl_spear 	troops_defl_sword 	troops_defl_axe 	troops_defl_archer 	troops_defl_spy 	troops_defl_light 	troops_defl_marcher 	troops_defl_heavy 	troops_defl_ram 	troops_defl_catapult 	troops_defl_priest 	troops_defl_knight 	troops_defl_snob
+*/
+	function sub($troops1,$troops2)
+	{
+		return array(
+			$troops1[0] - $troops2[0],		// 0
+			$troops1[1] - $troops2[1],
+			$troops1[2] - $troops2[2],
+			$troops1[3] - $troops2[3],
+			
+			$troops1[4] - $troops2[4],		// 1
+			$troops1[5] - $troops2[5],
+			$troops1[6] - $troops2[6],
+			$troops1[7] - $troops2[7],
+
+			$troops1[8] - $troops2[8],		// 2
+			$troops1[9] - $troops2[9],
+			$troops1[10] - $troops2[10],
+			$troops1[11] - $troops2[11],
+		);
+	}
+
+	function count_off($troops)
+	{
+		return $troops[2] + 4*$troops[5] + 5*$troops[6] + 5*$troops[8];
+	}
+
+	function count_def($troops)
+	{
+		return $troops[0] + $troops[1] + $troops[3] + 6*$troops[7];
+	}
+
+
+    function create_att_troops($report)		{	return $this->create_troops_array($report,"troops_att");		}
+    function create_attl_troops($report)	{	return $this->create_troops_array($report,"troops_attl");		}
+    function create_def_troops($report)		{	return $this->create_troops_array($report,"troops_def");		}
+    function create_defl_troops($report)	{	return $this->create_troops_array($report,"troops_defl");		}
+
+    function create_troops_array($report, $type)
+    {
+    	if ($report["no_information"]==1) return false;
+
+		return array(
+			$report[$type."_spear"],		// 0
+			$report[$type."_sword"],
+			$report[$type."_axe"],
+			$report[$type."_archer"],
+
+			$report[$type."_spy"],			// 4
+			$report[$type."_light"],
+			$report[$type."_marcher"],
+			$report[$type."_heavy"],
+
+			$report[$type."_ram"],			// 8
+			$report[$type."_catapult"],
+//			$report[$type."_priest"],
+			$report[$type."_knight"],
+			$report[$type."_snob"],
+		);
+    }
+      
+
+	function troops_toString($troops)
+	{
+		return $troops[0]."/".$troops[1]."/".$troops[2]."/".$troops[3]." ".$troops[4]."/".$troops[5]."/".$troops[6]."/".$troops[7]." ". $troops[8]."/".$troops[9];
+	}
+
+	function att_description($troops_before,$troops_lost)
+	{
+		if (!$troops_before) return "-";
+		$troops_after = $this->sub($troops_before,$troops_lost);
+		return $this->troops_toString($troops_before)." -> ".$this->troops_toString($troops_after);
+	}
+
+	function def_description($troops_before,$troops_lost)
+	{
+		if (!$troops_before) return "-";
+		$troops_after = $this->sub($troops_before,$troops_lost);
+		return $this->troops_toString($troops_before)." -> ".$this->troops_toString($troops_after);
+	}
+
+
+	function create_sumary($report,$coord)
+ 	{
+ 		if ($coord === $report["attacker_coords"]) return "attack: ".$this->att_description($this->create_att_troops($report),$this->create_attl_troops($report));
+ 		if ($coord === $report["defender_coords"]) return "defend: ".$this->def_description($this->create_def_troops($report),$this->create_defl_troops($report));
+ 		return "wrong!";
+ 	}
+ 
+ 
+        
+	/**
+	  * Search for reports.
+	  */
+	function action_searchex()
+	{
+	    $this->title = 'Berichte durchsuchen';
+	    $this->content = 'searchex';
+            
+        $this->smarty->assign('no_page_select', true);
+
+		$input = isset($_GET['coord']) ? $_GET['coord'] : '';
+		preg_match_all('/\d{1,3}\|\d{1,3}/', $input, $coord);
+		
+		if (count($coord)==0) {
+			// Fehler !!	
+		}
+		$coord = $coord[0][0];
+
+		$general = array();
+		$general[] = 'attacker_coords = "'.addslashes($coord).'"';
+		$general[] = 'defender_coords = "'.addslashes($coord).'"';
+
+		$where_general = implode(' OR ', $general);
+        $where_all = implode(' OR ', array($where_general));
+
+        if(count($this->user->worlds) > 0 and !$this->user->isAdmin())
+        {
+            if(strlen($where_all) > 0)
+                $where_all .= ' AND ';
+            $where_all .= 'world IN (0,'.$this->user->getVal('worlds').')';
+        }
+/*
+		echo "<pre>";
+		print_r($input);
+		echo "</pre>";
+		echo "<pre>";
+		print_r($coord);
+		echo "</pre>";
+		echo "<pre>";
+		print_r($where_all);
+		echo "</pre>";
+*/
+        $model = new ReportsModel($this->mysql);
+        $reports = $model->get('*', 'realtime DESC', $where_all);
+//        $reports = $model->get('id, group_id, time, realtime, world, attacker_nick, defender_nick, defender_village', 'realtime DESC', $where_all);
+
+
+        if($reports === FALSE)
+            $this->sqlError();
+        
+        
+		// Zusammenfassung
+        foreach($reports as $key => $value)
+        {
+            $reports[$key] = array_merge($reports[$key], array('sumary' => $this->create_sumary($reports[$key],$coord)));
+        }
+
+
+        // get group names
+        $model_report_groups = new ReportGroupsModel($this->mysql);
+        foreach($reports as $key => $value)
+        {
+            $reports[$key] = array_merge($reports[$key], array('group' => $model_report_groups->getGroupName($reports[$key]['group_id'])));
+        }
+        
+        $this->smarty->assign('reports', $reports);
+        $this->smarty->assign('coord', $coord);
+//        $this->smarty->assign('search', $search);				// wie muss idese Zeile aussehen ????
+
+        
+        // provide the template the possible usernames and report groups
+        $usermodel = new UserModel($this->mysql);
+        $usernames = $usermodel->get('name', 'name', 'activated = 1');
+        $this->smarty->assign('usernames', $usernames);
+        
+        $model_report_groups = new ReportGroupsModel($this->mysql);
+        $this->smarty->assign('report_groups', $model_report_groups->get());
+    }
+
+
+
+
+
         
         /**
           * This action is for displaying the parse form.

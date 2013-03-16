@@ -17,4 +17,6 @@ Außerdem kann die Berichtedatenbank umfangreich und nach vielen verschiedenen P
     <li>"Aktuell", eine Seite auf der die Stammesadmins alles aktuelle anpinnen können - darunter auch Angriffspläne usw.</li>
     <li>Defensivtruppen-Anforderung</li>
     <li>...</li>
+    <li>"Berichte suchen" ist in die Suchleiste vom Firefox integriert</li>
 </ul>
+

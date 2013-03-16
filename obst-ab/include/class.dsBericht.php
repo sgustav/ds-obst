@@ -481,7 +481,7 @@ class dsBericht {
     function parse_luck()
     {
         $luck=FALSE;
-        if($this->preg_match_std('/Gl.{1,2}ck \(aus Sicht des Angreifers\).*\s+([\-0-9]*[0-9]+\.[0-9]+)%/s'))
+        if($this->preg_match_std('/Gl.{1,2}ck \(aus Sicht des Angreifers\).*\s+([\-0-9]*[0-9]+\.[0-9]+)%/'))
         {
             $luck=$this->match(1);
         }

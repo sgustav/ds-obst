@@ -1,3 +1,9 @@
+<head>
+	<link rel="search" type="application/opensearchdescription+xml" href="ds-obst.php" title="OBST suche" />
+</head>
+
+
+
 <p>Willkommen zu OBST.</p>
 
 <p>OBST ist ein Stammestool für Stämme des Browsergames <a href="http://www.die-staemme.de">DieStämme</a>. Die Hauptfunktion des Tools besteht darin,

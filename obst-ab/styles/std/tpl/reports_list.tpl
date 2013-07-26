@@ -13,12 +13,19 @@
 
 <form action="index.php?page=reports&amp;action=mass_edit" method="post">
     {if count($reports) > 0}
-    <table class="simple_border" style="width: 100%;">
+    <table class="simple_border {$mode}_style" style="width: 100%;">
         <tr>
             <th title="Wann der Bericht eingelesen wurde..." width="100">Eingelesen am</th>
             <th title="Wann der Angriff stattgefunden hat..." width="100">Datum</th>
             <th title="Betreff">Betreff</th>
+{if $mode=='mood'}
+            <th>Dorf</th>
+            <th>Zustimmung (Bericht)</th>
+            <th>Zustimmung (jetzt)</th>
+{elseif $mode=='searchex'}
             <th>Zusammenfassung</th>
+{/if}
+
             <th title="Welt">Welt</th>
             <th title="Gruppe des Berichts">Gruppe</th>
             <th>Angreifer</th>
@@ -29,8 +36,24 @@
         <tr>
             <td>{$report.realtime|date_format:"%d.%m.%Y, %H:%M"}</td>
             <td>{$report.time|date_format:"%d.%m.%Y, %H:%M"}</td>
-            <td><img src="styles/std/graphic/dots/{$report.dot}.png" title="" alt="" class=""> {if $report.lastcomment > $obst_user->getVal('lastlogin')}! {/if}<a href="index.php?page=reports&amp;action=view&amp;id={$report.id}">{$report.attacker_nick} greift {$report.defender_village} an</a></td>
+
+            <td><img src="styles/std/graphic/dots/{$report.dot}.png" title="" alt="" class=""> {if $report.lastcomment > $obst_user->getVal('lastlogin')}! {/if}<a href="index.php?page=reports&amp;action=view&amp;id={$report.id}">
+
+{if $report.mood != 0 && $report.mood_after <= 0}
+            {$report.attacker_nick} erobert {$report.defender_village}
+{else}
+            {$report.attacker_nick} greift {$report.defender_village} an
+{/if}
+			</a></td>
+
+{if $mode=='mood'}
+            <td>{$report.defender_coords}</td>
+            <td padding-right="10px" align="right">{$report.mood_after}</td>
+            <td padding-right="10px" align="right">{$report.mood_now}</td>
+{elseif $mode=='searchex'}
             <td>{$report.sumary}</td>
+{/if}
+
             <td>{if $report.world != 0}{$report.world}{else}-{/if}</td>
             <td>{$report.group}</td>
             <td>{$report.attacker_nick}</td>

@@ -6,6 +6,7 @@
         <li><a href="index.php?page=reports&amp;action=all">Alle Berichte</a></li>
         <li><a href="index.php?page=reports&amp;action=parse">Bericht einlesen</a></li>
         <li><a href="index.php?page=reports&amp;action=search">Suche</a></li>
+        <li><a href="index.php?page=reports&amp;action=search_mood" title="Aktuelle Zustimmung (gewonnen aus Berichten)">Suche Zustimmung</a></li>
     </ul>
 </div>
 

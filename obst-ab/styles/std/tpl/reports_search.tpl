@@ -64,5 +64,5 @@
 
 {if isset($reports)}
 <br />
-{include file='reports_list.tpl'}
+{include file='reports_list.tpl' mode='search'}
 {/if}

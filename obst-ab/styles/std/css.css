@@ -103,6 +103,18 @@ table.report_comment td
 {
     vertical-align: top;
 }
+
+.simple_border td:nth-child(1),td:nth-child(2)
+{
+	padding-left: 8px;
+	padding-right: 8px;
+	white-space: nowrap;
+}
+.simple_border td:last-child
+{
+	text-align:center;
+}
+
 #report_comments_box
 {
     max-width: 500px;

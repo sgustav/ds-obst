@@ -366,6 +366,81 @@ troops_defl_spear 	troops_defl_sword 	troops_defl_axe 	troops_defl_archer 	troop
 	/**
 	  * Search for reports.
 	  */
+	function action_search_mood()
+	{
+	    $this->title = 'Berichte durchsuchen';
+	    $this->content = 'search_mood';
+            
+        $this->smarty->assign('no_page_select', true);
+
+
+		$where = '';
+
+        if(count($this->user->worlds) > 0 and !$this->user->isAdmin())
+        {
+            $where .= ' AND ';
+            $where .= 'world IN (0,'.$this->user->getVal('worlds').')';
+        }
+
+		$now = time();
+
+		$stmt = "
+SELECT xdb_reports.*
+FROM
+        xdb_reports
+INNER JOIN
+(
+        SELECT defender_coords,MAX(1000*time - mood_after) AS time_mood
+        FROM xdb_reports WHERE mood!=0 AND time>" . $now . "-100*60*60 " . $where . "
+        GROUP BY defender_coords
+        ORDER BY time DESC
+) maxt
+ON (maxt.defender_coords = xdb_reports.defender_coords AND maxt.time_mood = 1000*xdb_reports.time - xdb_reports.mood_after)";
+
+
+/*
+		echo "<pre>";
+		print_r($stmt);
+		echo "</pre>";
+		echo "<pre>";
+		print_r($where_all);
+		echo "</pre>";
+*/
+        $model = new ReportsModel($this->mysql);
+        $reports = $model->select($stmt);
+
+        if($reports === FALSE)
+            $this->sqlError();
+
+		// calculate 'mood_now'
+        foreach($reports as $key => $value)
+        {
+        	$hours = floor(($now - $value['time']) / (60*60));
+			$mood_now = $value['mood_after'];
+			if ($mood_now <= 0) $mood_now = 25;
+			$mood_now += $hours;
+			if ($mood_now > 100) $mood_now = 100;
+            $reports[$key] = array_merge($reports[$key],array('mood_now' => $mood_now));
+        }
+
+        $this->smarty->assign('reports', $reports);
+        $this->smarty->assign('coord', "111|222");
+        
+        // provide the template the possible usernames and report groups
+        $usermodel = new UserModel($this->mysql);
+        $usernames = $usermodel->get('name', 'name', 'activated = 1');
+        $this->smarty->assign('usernames', $usernames);
+        
+        $model_report_groups = new ReportGroupsModel($this->mysql);
+        $this->smarty->assign('report_groups', $model_report_groups->get());
+    }
+
+
+
+        
+	/**
+	  * Search for reports.
+	  */
 	function action_searchex()
 	{
 	    $this->title = 'Berichte durchsuchen';
@@ -951,7 +1026,7 @@ troops_defl_spear 	troops_defl_sword 	troops_defl_axe 	troops_defl_archer 	troop
             $model = new ReportsModel($this->mysql);
             $model_report_groups = new ReportGroupsModel($this->mysql);
             
-            $result = $model->get(  'id, group_id, time, realtime, lastcomment, world, attacker_nick, defender_nick, defender_village, dot', 
+            $result = $model->get(  'id, mood, mood_after, group_id, time, realtime, lastcomment, world, attacker_nick, defender_nick, defender_village, dot', 
                                     'realtime DESC',
                                     ((count($this->user->worlds) > 0 and ($this->user->worlds != $obst['worlds']) and !$this->user->isAdmin()) ? ('world IN (0,'.$this->user->getVal('worlds').')') : ''),
                                     $limit,

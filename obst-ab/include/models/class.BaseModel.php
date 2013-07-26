@@ -45,20 +45,9 @@
             
             return $result;
         }
-        
-        public function get($columns='*', $order='', $where='', $limit='', $offset='')
-        {
-            if(!empty($order))
-                $order = "ORDER BY $order";
-            if(!empty($limit) && !empty($offset))
-                $limit = "LIMIT $offset,$limit";
-            elseif(!empty($limit))
-                $limit = "LIMIT $limit";
-            if(!empty($where))
-                $where = "WHERE $where";
 
-            $stmt = "SELECT $columns FROM ".$this->table." $where $order $limit";
-            
+        public function select($stmt)
+        {
             $query = $this->mysql->sql_query($stmt);
             $result = false;
             
@@ -77,6 +66,22 @@
             }
             
             return $result;
+        }
+        
+        public function get($columns='*', $order='', $where='', $limit='', $offset='')
+        {
+            if(!empty($order))
+                $order = "ORDER BY $order";
+            if(!empty($limit) && !empty($offset))
+                $limit = "LIMIT $offset,$limit";
+            elseif(!empty($limit))
+                $limit = "LIMIT $limit";
+            if(!empty($where))
+                $where = "WHERE $where";
+
+            $stmt = "SELECT $columns FROM ".$this->table." $where $order $limit";
+            
+            return $this->select($stmt);
         }
         
         public function insert($columns, $values)

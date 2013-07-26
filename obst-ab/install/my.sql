@@ -12,13 +12,52 @@
 -- Datenbank: `obst`
 -- 
 
+
+
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS `CreateIndex` $$
+CREATE PROCEDURE `CreateIndex`
+(
+    given_table    VARCHAR(64),
+    given_index    VARCHAR(64),
+    given_columns  VARCHAR(64)
+)
+BEGIN
+
+    DECLARE IndexIsThere INTEGER;
+
+    SELECT COUNT(1) INTO IndexIsThere
+        FROM INFORMATION_SCHEMA.STATISTICS
+        WHERE table_schema = 'db_de59'
+        AND   table_name   = given_table
+        AND   index_name   = given_index;
+
+    IF IndexIsThere = 0 THEN
+        SET @sqlstmt = CONCAT('CREATE INDEX ',given_index,' ON ',
+        given_table,' (',given_columns,')');
+        PREPARE st FROM @sqlstmt;
+        EXECUTE st;
+        DEALLOCATE PREPARE st;
+    END IF;
+
+END $$
+
+DELIMITER ;
+
+
+
+
+
+
 -- --------------------------------------------------------
 
 -- 
 -- Tabellenstruktur für Tabelle `xdb_config`
 -- 
 
-CREATE TABLE `xdb_config` (
+CREATE TABLE IF NOT EXISTS `xdb_config` (
   `cfg_name` varchar(25) collate latin1_general_ci NOT NULL,
   `cfg_value` varchar(25) collate latin1_general_ci NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE=latin1_general_ci;
@@ -29,7 +68,7 @@ CREATE TABLE `xdb_config` (
 -- Tabellenstruktur für Tabelle `xdb_report_comments`
 -- 
 
-CREATE TABLE `xdb_report_comments` (
+CREATE TABLE IF NOT EXISTS `xdb_report_comments` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `report_id` int(10) unsigned NOT NULL,
   `user_id` int(10) unsigned NOT NULL,
@@ -44,7 +83,7 @@ CREATE TABLE `xdb_report_comments` (
 -- Tabellenstruktur für Tabelle `xdb_report_groups`
 -- 
 
-CREATE TABLE `xdb_report_groups` (
+CREATE TABLE IF NOT EXISTS `xdb_report_groups` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) NOT NULL,
   PRIMARY KEY  (`id`)
@@ -56,7 +95,7 @@ CREATE TABLE `xdb_report_groups` (
 -- Tabellenstruktur für Tabelle `xdb_reports`
 -- 
 
-CREATE TABLE `xdb_reports` (
+CREATE TABLE IF NOT EXISTS `xdb_reports` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `user_id` int(10) unsigned NOT NULL,
   `group_id` int(10) NOT NULL,
@@ -201,13 +240,19 @@ CREATE TABLE `xdb_reports` (
   PRIMARY KEY  (`id`)
 ) ENGINE=MyISAM  DEFAULT CHARSET=latin1 ;
 
+
+call CreateIndex('xdb_reports','xdb_reports__time','time'); 
+call CreateIndex('xdb_reports','xdb_reports__attacker_coords','attacker_coords'); 
+call CreateIndex('xdb_reports','xdb_reports__defender_coords','defender_coords'); 
+
+
 -- --------------------------------------------------------
 
 -- 
 -- Tabellenstruktur für Tabelle `xdb_reservations`
 -- 
 
-CREATE TABLE `xdb_reservations` (
+CREATE TABLE IF NOT EXISTS `xdb_reservations` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `user_id` int(11) NOT NULL,
   `koords` varchar(10) collate latin1_general_ci NOT NULL,
@@ -221,7 +266,7 @@ CREATE TABLE `xdb_reservations` (
 -- Tabellenstruktur für Tabelle `xdb_users`
 -- 
 
-CREATE TABLE `xdb_users` (
+CREATE TABLE IF NOT EXISTS `xdb_users` (
   `id` int(10) unsigned NOT NULL auto_increment,
   `name` varchar(50) collate latin1_general_ci NOT NULL,
   `pass` varchar(32) collate latin1_general_ci NOT NULL,

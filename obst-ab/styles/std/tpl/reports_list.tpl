@@ -13,7 +13,7 @@
 
 <form action="index.php?page=reports&amp;action=mass_edit" method="post">
     {if count($reports) > 0}
-    <table class="simple_border {$mode}_style" style="width: 100%;">
+    <table class="simple_border all_styles {$mode}_style" style="width: 100%;">
         <tr>
             <th title="Wann der Bericht eingelesen wurde..." width="100">Eingelesen am</th>
             <th title="Wann der Angriff stattgefunden hat..." width="100">Datum</th>

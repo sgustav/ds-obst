@@ -13,7 +13,7 @@
 	</tr>
 	<tr>
             <td>Gesendet</td>
-            <td>{$report.time|date_format:"%d.%m.%Y %H:%M"}</td>
+            <td>{$report.time|date_format:"%d.%m.%Y %H:%M:%S"}</td>
         </tr>
 	<tr>
 	    <td colspan="2" style="border: 1px solid black; padding: 4px;" height="160" valign="top">

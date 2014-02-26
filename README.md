@@ -13,3 +13,25 @@ von Nussi13 gegeben mit einigen Verbesserungen (http://forum.die-staemme.de/show
 
 2013 hat Gusfan hier auf Github das Projekt eingecheckt und verschiedene Fixes, die im Laufe der Zeit zusammengekommen
 waren, eingespielt (neben ein paar eigenen Verbesserungen).
+
+Changelog
+---------
+
+### Version 1.0.0.2
+
+- dsgfx Grafiken gefixt
+- Security Verbesserungen
+- Smarty Update
+
+### Version 1.0.0.1-Gusfan
+
+- TODO: Änderungen von Gusfan dokumentieren
+
+### Version 1.0.0.1
+
+- Punkte für Berichte wurden im Bericht und in der Übersicht mit eingebaut (rot, grün, blau, gelb).
+
+### Version 1.0.0.0
+
+- Nussi13's Relaunch von ds-obst basierend auf 0.9.0.2
+- TODO: Änderungen zur Basis-Version 0.9.0.2 dokumentieren

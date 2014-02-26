@@ -95,6 +95,10 @@
         
         protected function redirect($newPage)
         {
+            if(strpos($newPage, "\r") !== false or
+               strpos($newPage, "\n") !== false)
+               die("Hacking attempt (Page::redirect()).");
+
             $newPage = trim($newPage);
             header("Location: $newPage");
             exit;
@@ -102,6 +106,11 @@
         
         protected function flash($target, $message)
         {
+		    if(strpos($target, "'") !== false or
+			   strpos($target, '"') !== false or
+			   !preg_match("/^[a-z0-9_\-]+\.php((\?|&)[a-zA-Z]+=[a-zA-Z0-9]+)*$/", $target))
+			   die("Hacking attempt.");
+
             $this->smarty->assign('title', $this->title);
             $this->smarty->assign('redirect', $target);
             $this->smarty->assign('message', $message);

@@ -83,7 +83,7 @@
         function initSession()
         {
             // Gast
-            session_destroy();
+            session_regenerate_id(true);
             session_start();
             $this->setVal('user_level', 0);
             $this->setVal('admin', 0);
@@ -204,6 +204,7 @@
         
         function destroy()
         {
+			session_destroy();
             $this->initSession();
         }
     }

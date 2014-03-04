@@ -19,9 +19,10 @@
     **/
 
     if(!defined('XDB_INCCHECK')) die('access denied');
-    
-    /* CONFIGURATION of OBST */
-    
+
+		// DEFAULT CONFIGURATION.
+		// OVERRIDE IN config/localconfig.php!!!
+		
         $obst = array();
         
         /* You can deactivate OBST completely by setting this variable to "false"
@@ -57,15 +58,16 @@
         /* This setting specifies the path to smarty, OBST's template engine */
         define('OBST_SMARTYDIR',OBST_ROOT.'/../smarty'); // smarty directory
         
-        // unit configuration
+		// Load local configuration
+		if (file_exists(OBST_ROOT.'/config/localconfig.php')) {
+			require(OBST_ROOT.'/config/localconfig.php');
+		} else {
+			die("OBST wurde noch nicht konfiguriert (Datei config/localconfig.php fehlt)");
+		}
+		
+        // Load unit configuration
         require(OBST_ROOT.'/include/class.DSUnit.php');
-        require(OBST_ROOT.'/include/config.units.php'); // IMPORTANT: LOOK IN THIS FILE, TOO!
-        
-        // mysql configuration
-        $mysql_user='db_username';
-        $mysql_pass='db_password';
-        $mysql_host='db_host'; // the database host address
-        $mysql_name='db_name'; // the database name
+        require(OBST_ROOT.'/config/units.php');
     
     /* END configuration of OBST */
 ?>

@@ -19,7 +19,7 @@
 	    <td colspan="2" style="border: 1px solid black; padding: 4px;" height="160" valign="top">
 	    <h3 style="margin-top: 0px; text-decoration: none;">{if $report.winner == 1}Der Angreifer hat gewonnen{else}Der Verteidiger hat gewonnen{/if}</h3>
             <h4>Glück (aus Sicht des Angreifers)</h4>
-            <table>
+            <table id="attack_luck">
                 <tbody>
                     <tr>
                         {if $report.luck <= 0}<td class="nobg" style="padding: 0pt;"><b>{$report.luck}%</b></td>{/if}
@@ -32,7 +32,7 @@
                                                 {if $report.luck <> 0}
                                                     <td width="{if $report.luck <= 0}{math equation="(25 + luck) * 2" luck = $report.luck_i}{else}48{/if}" height="12"></td>
                                                     <td width="{if $report.luck <= 0}{math equation="-luck * 2" luck=$report.luck_i}{else}0{/if}" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_pech.png);"></td>
-                                                    <td width="2" style="background-color:rgb(0, 0, 0)"></td>
+                                                    <td width="1" style="background-color:rgb(0, 0, 0)"></td>
                                                     <td width="{if $report.luck > 0}{math equation="(luck) * 2" luck = $report.luck_i}{else}0{/if}" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_glueck.png);"></td>
                                                     <td width="{if $report.luck > 0}{math equation="(25 - luck) * 2" luck = $report.luck_i}{else}48{/if}" height="12"></td>
                                                 {else}
@@ -50,6 +50,7 @@
                             <img src="{$obst_root}/styles/std/dsgfx/{if $report.luck > 0}klee.png{else}klee_grau.png{/if}" alt="Glück" />
                         </td>
                 
+						{if $report.luck > 0}<td class="nobg" style="padding: 0pt;"><b>{$report.luck}%</b></td>{/if}
                     </tr>
                 </tbody>
             </table>
@@ -245,7 +246,6 @@
                            <table width="100%" class="simple_border">
                                 <tbody>
                                     <tr>
-                                        <th width="200"></th>
                                         {foreach from=$units item=unit}
                                         <th width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
                                         {/foreach}

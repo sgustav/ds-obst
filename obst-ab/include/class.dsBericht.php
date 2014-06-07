@@ -452,9 +452,9 @@ class dsBericht {
     // #############
     function parse_time()
     {
-    	// sample: Gesendet	26.07.13 23:06:46
+    	// sample: Kampfzeit	26.07.13 23:06:46
         $time=FALSE;
-        if($this->preg_match_std('/Gesendet\s+([0-9]+)\.([0-9]+)\.([0-9]+)\s+([0-9]+):([0-9]+):([0-9]+)/'))
+        if($this->preg_match_std('/Kampfzeit\s+([0-9]+)\.([0-9]+)\.([0-9]+)\s+([0-9]+):([0-9]+):([0-9]+)/'))
         {
             $time=mktime($this->match(4), $this->match(5), $this->match(6), $this->match(2), $this->match(1), $this->match(3));
             // int mktime ( [int Stunde [, int Minute [, int Sekunde [, int Monat [, int Tag [, int Jahr [, int is_dst]]]]]]] )

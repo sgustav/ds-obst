@@ -38,7 +38,7 @@
     switch($action)
     {
         case '':
-            echo 'Bitte öffne die Datei /include/config.inc.php und konfiguriere OBST. '.stepurl(2);
+            echo 'Bitte benenne als erstes die Datei /config/localconfig.sample.php um zu localconfig.php und konfiguriere OBST darin (mit einem Text-Editor). '.stepurl(2);
             break;
         case 'step2':
             $requirements_fulfilled = true;

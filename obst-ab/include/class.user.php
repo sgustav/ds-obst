@@ -47,7 +47,7 @@
             {
                 $this->initSession();
             }
-            else
+            else if ($this->loggedIn())
             {
                 // die Session überprüfen
                 if($this->getVal('ip') != $_SERVER['REMOTE_ADDR'])
@@ -83,8 +83,7 @@
         function initSession()
         {
             // Gast
-            session_destroy();
-            session_start();
+            session_regenerate_id(true);
             $this->setVal('user_level', 0);
             $this->setVal('admin', 0);
             $this->setVal('logged_in', FALSE);
@@ -204,6 +203,7 @@
         
         function destroy()
         {
+			session_destroy();
             $this->initSession();
         }
     }

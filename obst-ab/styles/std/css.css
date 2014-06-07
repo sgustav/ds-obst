@@ -104,17 +104,6 @@ table.report_comment td
     vertical-align: top;
 }
 
-.all_styles td:nth-child(1),td:nth-child(2)
-{
-	padding-left: 8px;
-	padding-right: 8px;
-	white-space: nowrap;
-}
-.all_styles td:last-child
-{
-	text-align:center;
-}
-
 #report_comments_box
 {
     max-width: 500px;
@@ -181,7 +170,10 @@ td.center { text-align: center; }
 tr.marked { background-color: #FFAAAA; }
 td.marked { background-color: #FFAAAA; }
 
-
+#attack_luck .luck {
+	border: 1px black solid;
+	border-spacing: 2px;
+}
 
 /* ab hier DIEST�ME FORMATIERUNGEN!! */
 table.vis td { background-color:#F8F4E8; font-size: 9pt; }

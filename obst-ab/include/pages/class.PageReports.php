@@ -577,6 +577,11 @@ ON (maxt.defender_coords = xdb_reports.defender_coords AND maxt.time_mood = 1000
                 if(!$parser->parse($_POST['report']))
                 {
                     $this->errors[] = 'Der Bericht konnte nicht eingelesen werden! Möglicherweise musst du eine neue Version von OBST installieren!';
+					if (DSBERICHT_DEBUG) {
+						foreach ($parser->report as $key => $value) {
+							$this->errors[] = "$key: ".(($value !== false) ? " Okay." : "FEHLER!");
+						}
+					}
                     return;
                 }
                 

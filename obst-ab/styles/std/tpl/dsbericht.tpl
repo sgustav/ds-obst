@@ -19,11 +19,11 @@
 	    <td colspan="2" style="border: 1px solid black; padding: 4px;" height="160" valign="top">
 	    <h3 style="margin-top: 0px; text-decoration: none;">{if $report.winner == 1}Der Angreifer hat gewonnen{else}Der Verteidiger hat gewonnen{/if}</h3>
             <h4>Glück (aus Sicht des Angreifers)</h4>
-            <table>
+            <table id="attack_luck">
                 <tbody>
                     <tr>
                         {if $report.luck <= 0}<td class="nobg" style="padding: 0pt;"><b>{$report.luck}%</b></td>{/if}
-                        <td class="nobg"><img src="{if $report.luck <= 0}http://dsgfx.bmaker.net/rabe.png{else}http://dsgfx.bmaker.net/rabe_grau.png{/if}" alt="Pech" /></td>
+                        <td class="nobg"><img src="{$obst_root}/styles/std/dsgfx/{if $report.luck <= 0}rabe.png{else}rabe_grau.png{/if}" alt="Pech" /></td>
                 
                         <td class="nobg">
                                 <table class="luck" cellpadding="0" cellspacing="0">
@@ -31,31 +31,26 @@
                                             <tr>
                                                 {if $report.luck <> 0}
                                                     <td width="{if $report.luck <= 0}{math equation="(25 + luck) * 2" luck = $report.luck_i}{else}48{/if}" height="12"></td>
-                                                    <td width="{if $report.luck <= 0}{math equation="-luck * 2" luck=$report.luck_i}{else}0{/if}" style="background-image:url(http://dsgfx.bmaker.net/balken_pech.png);"></td>
-                                                    <td width="2" style="background-color:rgb(0, 0, 0)"></td>
-                                                    <td width="{if $report.luck > 0}{math equation="(luck) * 2" luck = $report.luck_i}{else}0{/if}" style="background-image:url(http://dsgfx.bmaker.net/balken_glueck.png);"></td>
+                                                    <td width="{if $report.luck <= 0}{math equation="-luck * 2" luck=$report.luck_i}{else}0{/if}" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_pech.png);"></td>
+                                                    <td width="1" style="background-color:rgb(0, 0, 0)"></td>
+                                                    <td width="{if $report.luck > 0}{math equation="(luck) * 2" luck = $report.luck_i}{else}0{/if}" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_glueck.png);"></td>
                                                     <td width="{if $report.luck > 0}{math equation="(25 - luck) * 2" luck = $report.luck_i}{else}48{/if}" height="12"></td>
                                                 {else}
                                                     <td width="48" height="12"></td>
-                                                    <td width="0" style="background-image:url(http://dsgfx.bmaker.net/balken_pech.png);"></td>
+                                                    <td width="0" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_pech.png);"></td>
                                                     <td width="2" style="background-color:rgb(0, 0, 0)"></td>
-                                                    <td width="0" style="background-image:url(http://dsgfx.bmaker.net/balken_glueck.png);"></td>
+                                                    <td width="0" style="background-image:url({$obst_root}/styles/std/dsgfx/balken_glueck.png);"></td>
                                                     <td width="48" height="12"></td>
                                                 {/if}
-                                                <!--
-                                                <td class="luck-item nobg" height="12" width="45.76110442"></td>http://die-staemme.de/graphic/klee_grau.png?1
-                                                <td class="luck-item nobg" style="background-image: url(&quot;graphic/balken_pech.png?1&quot;); border-right: 1px solid rgb(0, 0, 0);" width="4.23889558"></td>
-                                                <td class="luck-item nobg" style="background-image: url(&quot;graphic/balken_glueck.png?1&quot;);" width="0"></td>
-                                                <td class="luck-item nobg" width="50"></td>
-                                                -->
                                             </tr>
                                         </tbody>
                                 </table>
                         </td>
                         <td class="nobg">
-                            <img src="{if $report.luck > 0}http://dsgfx.bmaker.net/klee.png{else}http://dsgfx.bmaker.net/klee_grau.png{/if}" alt="Glück" />
+                            <img src="{$obst_root}/styles/std/dsgfx/{if $report.luck > 0}klee.png{else}klee_grau.png{/if}" alt="Glück" />
                         </td>
                 
+						{if $report.luck > 0}<td class="nobg" style="padding: 0pt;"><b>{$report.luck}%</b></td>{/if}
                     </tr>
                 </tbody>
             </table>
@@ -78,53 +73,20 @@
                                     <tr class="center">
                                         <td></td>
                                         {foreach from=$units item=unit}
-                                        <td width="35"><img src="http://dsgfx.bmaker.net/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></td>
+                                        <td width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></td>
                                         {/foreach}
-                                        <!--
-                                        <td width="35"><img src="graphic/unit/unit_spear.png?1" title="Speerträger" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_sword.png?1" title="Schwertkämpfer" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_axe.png?1" title="Axtkämpfer" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_spy.png?1" title="Späher" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_light.png?1" title="Leichte Kavallerie" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_heavy.png?1" title="Schwere Kavallerie" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_ram.png?1" title="Rammbock" alt="" class=""></td>
-                                        <td width="35"><img src="graphic/unit/unit_catapult.png?1" title="Katapult" alt="" class="">
-                                        </td><td width="35"><img src="graphic/unit/unit_snob.png?1" title="Adelsgeschlecht" alt="" class=""></td>
-                                        -->
                                     </tr>
                                     <tr>
                                         <td width="20%">Anzahl:</td>
                                         {foreach from=$report.units_att item=unit}
                                         <td style="text-align: center;" {if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                         {/foreach}
-                                        <!--
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item">5</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item">100</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item">1</td>
-                                        -->
                                     </tr>
                                     <tr>
                                         <td align="left" width="20%">Verluste:</td>
                                         {foreach from=$report.units_attl item=unit}
                                         <td style="text-align: center;" {if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                         {/foreach}
-                                        <!--
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        <td style="text-align: center;" class="unit-item hidden">0</td>
-                                        -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -163,53 +125,20 @@
                                         <tr class="center">
                                             <td></td>
                                             {foreach from=$units item=unit}
-                                            <td width="35"><img src="http://dsgfx.bmaker.net/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></td>
+                                            <td width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></td>
                                             {/foreach}
-                                            <!--
-                                            <td width="35"><img src="graphic/unit/unit_spear.png?1" title="Speerträger" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_sword.png?1" title="Schwertkämpfer" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_axe.png?1" title="Axtkämpfer" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_spy.png?1" title="Späher" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_light.png?1" title="Leichte Kavallerie" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_heavy.png?1" title="Schwere Kavallerie" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_ram.png?1" title="Rammbock" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_catapult.png?1" title="Katapult" alt="" class=""></td>
-                                            <td width="35"><img src="graphic/unit/unit_snob.png?1" title="Adelsgeschlecht" alt="" class=""></td>
-                                            -->
                                         </tr>
                                         <tr>
                                             <td width="20%">Anzahl:</td>
                                             {foreach from=$report.units_deff item=unit}
                                             <td style="text-align: center;" {if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                             {/foreach}
-                                            <!--
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            -->
                                         </tr>
                                         <tr>
                                             <td align="left" width="20%">Verluste:</td>
                                             {foreach from=$report.units_deffl item=unit}
                                             <td style="text-align: center;" {if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                             {/foreach}
-                                            <!--
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            <td style="text-align: center;" class="unit-item hidden">0</td>
-                                            -->
                                         </tr>
                                     </tbody>
                                 </table>
@@ -227,9 +156,9 @@
                                             <th>Erspähte Rohstoffe:</th>
                                             <td>
                                                     {if $report.spied}
-                                                    <img src="http://dsgfx.bmaker.net/holz.png" title="Holz" alt="" />{$report.spied_wood}
-                                                    <img src="http://dsgfx.bmaker.net/lehm.png" title="Lehm" alt="" />{$report.spied_loam}
-                                                    <img src="http://dsgfx.bmaker.net/eisen.png" title="Eisen" alt="" />{$report.spied_iron}
+                                                    <img src="{$obst_root}/styles/std/dsgfx/holz.png" title="Holz" alt="" />{$report.spied_wood}
+                                                    <img src="{$obst_root}/styles/std/dsgfx/lehm.png" title="Lehm" alt="" />{$report.spied_loam}
+                                                    <img src="{$obst_root}/styles/std/dsgfx/eisen.png" title="Eisen" alt="" />{$report.spied_iron}
                                                     {else}
                                                     <i>keine</i>
                                                     {/if}
@@ -275,7 +204,7 @@
                                                     <table>
                                                         <tr>
                                                             {foreach from=$units item=unit}
-                                                            <th width="35"><img src="http://dsgfx.bmaker.net/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
+                                                            <th width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
                                                             {/foreach}
                                                         </tr>
                                                         <tr>
@@ -299,35 +228,13 @@
                                 <tbody>
                                     <tr>
                                         {foreach from=$units item=unit}
-                                        <th width="35"><img src="http://dsgfx.bmaker.net/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
+                                        <th width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
                                         {/foreach}
-                                        <!--
-                                        <th width="35"><img src="graphic/unit/unit_spear.png?1" title="Speerträger" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_sword.png?1" title="Schwertkämpfer" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_axe.png?1" title="Axtkämpfer" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_spy.png?1" title="Späher" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_light.png?1" title="Leichte Kavallerie" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_heavy.png?1" title="Schwere Kavallerie" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_ram.png?1" title="Rammbock" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_catapult.png?1" title="Katapult" alt="" class=""></th>
-                                        <th width="35"><img src="graphic/unit/unit_snob.png?1" title="Adelsgeschlecht" alt="" class=""></th>
-                                        -->
                                     </tr>
                                     <tr>
                                         {foreach from=$report.units_out item=unit}
                                         <td{if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                         {/foreach}
-                                        <!--
-                                        <td class="unit-item">6755</td>
-                                        <td class="unit-item">6200</td>
-                                        <td class="unit-item hidden">0</td>
-                                        <td class="unit-item">18</td>
-                                        <td class="unit-item hidden">0</td>
-                                        <td class="unit-item">1045</td>
-                                        <td class="unit-item hidden">0</td>
-                                        <td class="unit-item">20</td>
-                                        <td class="unit-item hidden">0</td>
-                                        -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -339,37 +246,17 @@
                            <table width="100%" class="simple_border">
                                 <tbody>
                                     <tr>
-                                        <th width="200"></th>
                                         {foreach from=$units item=unit}
-                                        <th width="35"><img src="http://dsgfx.bmaker.net/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
+                                        <th width="35"><img src="{$obst_root}/styles/std/dsgfx/unit_{$unit->iname}.png" title="{$unit->name}" alt="" /></th>
                                         {/foreach}
-                                        <!--
-                                        <th width="15"><img src="graphic/unit/unit_spear.png?1" title="Speerträger" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_sword.png?1" title="Schwertkämpfer" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_axe.png?1" title="Axtkämpfer" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_spy.png?1" title="Späher" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_light.png?1" title="Leichte Kavallerie" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_heavy.png?1" title="Schwere Kavallerie" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_ram.png?1" title="Rammbock" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_catapult.png?1" title="Katapult" alt="" class=""></th>
-                                        <th width="15"><img src="graphic/unit/unit_snob.png?1" title="Adelsgeschlecht" alt="" class=""></th>
-                                        -->
                                     </tr>
                                     <tr>
-                                        <!--<td><a href="/game.php?village=1961&amp;screen=info_village&amp;id=52951">|54:329:05| (445|581) K54</a></td>-->
                                         {foreach from=$report.spied_troops_out_village item=unit}
                                         <td><span class="ds_link">{$unit}</span></td>
                                         {/foreach}
                                         {foreach from=$report.units_spied item=unit}
                                         <td{if $unit == 0} class="hidden"{/if}>  {$unit}</td>
                                         {/foreach}
-                                        <!--
-                                        <td><a href="/game.php?village=1961&amp;screen=info_village&amp;id=52951">|54:329:05| (445|581) K54</a></td>
-                                        <td class="unit-item">608</td><td class="unit-item">457</td><td class="unit-item hidden">0</td>
-                                        <td class="unit-item hidden">0</td><td class="unit-item hidden">0</td>
-                                        <td class="unit-item hidden">0</td><td class="unit-item hidden">0</td>
-                                        <td class="unit-item hidden">0</td><td class="unit-item hidden">0</td>
-                                        -->
                                     </tr>
                                 </tbody>
                             </table>
@@ -380,9 +267,9 @@
                                     <tr>
                                         <th width="100">Beute:</th>
                                         <td width="220">
-                                            <img src="http://dsgfx.bmaker.net/holz.png" alt="Holz" /> {$report.booty_wood}
-                                            <img src="http://dsgfx.bmaker.net/lehm.png" alt="Lehm" /> {$report.booty_loam}
-                                            <img src="http://dsgfx.bmaker.net/eisen.png" alt="Eisen" /> {$report.booty_iron}
+                                            <img src="{$obst_root}/styles/std/dsgfx/holz.png" alt="Holz" /> {$report.booty_wood}
+                                            <img src="{$obst_root}/styles/std/dsgfx/lehm.png" alt="Lehm" /> {$report.booty_loam}
+                                            <img src="{$obst_root}/styles/std/dsgfx/eisen.png" alt="Eisen" /> {$report.booty_iron}
                                         </td>
                                         <td>
                                             {$report.booty_all}/{$report.booty_max}

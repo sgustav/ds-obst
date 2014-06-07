@@ -86,7 +86,7 @@
         // VALIDATIONS
  
         // user
-        $username = addslashes($_POST['user']);
+        $username = addslashes($_GET['user']);
         $res = $mysql->sql_query("SELECT
                                             id,
                                             name,
@@ -108,7 +108,7 @@
         $userdata = $mysql->sql_fetch_assoc($res);
  
         // password check
-        if($userdata['pass'] != $_POST['pass'])
+        if($userdata['pass'] != $_GET['pass'])
             error("The given username / password is wrong.");
  
         // does the user have the right to parse reports anyway?
@@ -116,9 +116,9 @@
             error("You do not have the right to parse reports!");
  
         // does the group exist?
-        if($_POST['group'] != "-1") {
+        if($_GET['group'] != "-1") {
             $model_group = new ReportGroupsModel($mysql);
-            $group = $model_group->get("id", "", "name='".addslashes($_POST['group'])."'", "1");
+            $group = $model_group->get("id", "", "name='".addslashes($_GET['group'])."'", "1");
  
             if($group === false)
             	_sqlError();
@@ -134,7 +134,7 @@
         }
  
         // does the world exist?
-        $world = intval($_POST['world']);
+        $world = intval($_GET['world']);
         if(array_search($world, $obst['worlds']) === false)
             error("The given world does not exist / is not supported by this OBST installation.");
  
@@ -142,7 +142,7 @@
         // parse and save the report
  
         $parser = new dsBericht($obst_units[intval($world)]);
-        if(!$parser->parse($_POST['report']))
+        if(!$parser->parse($_GET['report']))
         {
             error("The report could not be parsed.");
             return;
@@ -186,9 +186,9 @@
     }
  
     function requirePostValue($name, $emptyAllowed = false) {
-        if(!isset($_POST[$name]))
+        if(!isset($_GET[$name]))
             error("POST[$name] is not set");
-        if(!$emptyAllowed && empty($_POST[$name]))
+        if(!$emptyAllowed && empty($_GET[$name]))
             error("POST[$name] empty");
     }
  

@@ -210,14 +210,13 @@
     function sendAjaxResponse($message, $data="") {
         header("Content-Type: text/xml; charset=utf-8");
  
-        echo '<?xml version="1.0" encoding="utf-8"?>';
-        echo "\n";
+        echo $_GET['callback'];
+        echo '("';
         echo '<response>';
-        echo "\n";
-        echo "\t<message>$message</message>\n";
-        echo "\t<data>$data</data>\n";
+        echo "<message>$message</message>";
+        echo "<data>$data</data>";
         echo '</response>';
- 
+        echo '")';
         exit();
     }
 ?>
